@@ -91,7 +91,6 @@ pub mod run_n {
             let mut runner = default_runner();
             runner = runner
                 .with_scheduler(egg::BackoffScheduler::default())
-                // .with_scheduler(egg::SimpleScheduler)
                 .with_iter_limit(self.n);
             for start_expr in start_exprs.iter() {
                 runner = runner.with_expr(&start_expr.parse().unwrap());
@@ -149,13 +148,11 @@ pub mod run_n {
         fn run_egglog(&mut self) -> usize {
             let mut egraph = egg_smol::EGraph::default();
             egraph.match_limit = 1000;
-            // egraph.match_limit = usize::MAX;
             self.run_egglog_with_engine(egraph)
         }
         fn run_egglognaive(&mut self) -> usize {
             let mut egraph = egg_smol::EGraph::default();
             egraph.match_limit = 1000;
-            // egraph.match_limit = usize::MAX;
             egraph.seminaive = false;
             self.run_egglog_with_engine(egraph)
         }

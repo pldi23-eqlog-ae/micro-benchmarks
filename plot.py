@@ -37,7 +37,7 @@ egg_y = list(map(lambda x:x[1], egg))
 plt.plot(egg_y, egg_x, label="egg")
 plt.xlabel("Time (s)")
 plt.ylabel("E-node numbers")
-plt.ylim((10**4, None))
+plt.ylim((10**5, None))
 plt.yscale('log')
 
 plt.legend(loc='lower right')

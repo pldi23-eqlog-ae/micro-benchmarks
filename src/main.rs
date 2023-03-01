@@ -100,9 +100,6 @@ impl BenchmarkRunner {
     pub fn run(&self, benches: Vec<Box<dyn Benchmark>>) -> Vec<BenchmarkRecord> {
         let mut records = vec![];
         for (i, mut bench) in benches.into_iter().enumerate() {
-            let r = self.run_one(&mut bench);
-            records.extend(r.into_iter());
-
             if i % 5 == 0 {
                 let mut wtr = WriterBuilder::new().has_headers(false).from_writer(vec![]);
                 for record in records.iter() {
@@ -111,6 +108,8 @@ impl BenchmarkRunner {
                 let data = String::from_utf8(wtr.into_inner().unwrap()).unwrap();
                 fs::write("benchmarks.csv", data).unwrap();
             }
+            let r = self.run_one(&mut bench);
+            records.extend(r.into_iter());
         }
         records
     }
@@ -204,7 +203,6 @@ fn main() {
     env_logger::init();
     let mut benches = vec![];
     for i in 1..opt.iter_size + 1 {
-        // for i in opt.iter_size..opt.iter_size + 1 {
         benches.push(math::run_n::new(i));
     }
     let records = BenchmarkRunner::default().run(benches);
