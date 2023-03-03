@@ -29,6 +29,8 @@ pub(crate) struct Opt {
     repeat: usize,
     #[structopt(long, default_value = "100")]
     iter_size: usize,
+    #[structopt(long, default_value = "benchmarks.csv")]
+    csvfile: String,
 }
 
 pub fn get_text(name: &str) -> Option<String> {
@@ -98,6 +100,7 @@ struct BenchmarkRunner;
 
 impl BenchmarkRunner {
     pub fn run(&self, benches: Vec<Box<dyn Benchmark>>) -> Vec<BenchmarkRecord> {
+        let opt = Opt::from_args();
         let mut records = vec![];
         for (i, mut bench) in benches.into_iter().enumerate() {
             if i % 5 == 0 {
@@ -106,7 +109,7 @@ impl BenchmarkRunner {
                     wtr.serialize(record).unwrap();
                 }
                 let data = String::from_utf8(wtr.into_inner().unwrap()).unwrap();
-                fs::write("benchmarks.csv", data).unwrap();
+                fs::write(&opt.csvfile, data).unwrap();
             }
             let r = self.run_one(&mut bench);
             records.extend(r.into_iter());
@@ -211,5 +214,5 @@ fn main() {
         wtr.serialize(record).unwrap();
     }
     let data = String::from_utf8(wtr.into_inner().unwrap()).unwrap();
-    fs::write("benchmarks.csv", data).unwrap();
+    fs::write(&opt.csvfile, data).unwrap();
 }

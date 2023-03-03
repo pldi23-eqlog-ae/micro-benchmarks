@@ -1,5 +1,5 @@
 [package]
-name = "egg-smol-benchmark"
+name = "eqlog-benchmark"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 egg = "0.9.3"
-egg-smol = { path = "../egg-smol/" }
+egg-smol = { path = "../eqlog/" }
 num-bigint = "0.4.3"
 num-integer = "0.1.45"
 num-rational = "0.4.0"
