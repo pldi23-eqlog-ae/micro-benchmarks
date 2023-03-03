@@ -27,7 +27,7 @@ pub(crate) struct Opt {
     // repeat should be an odd number
     #[structopt(long, default_value = "3")]
     repeat: usize,
-    #[structopt(long, default_value = "200")]
+    #[structopt(long, default_value = "100")]
     iter_size: usize,
 }
 
