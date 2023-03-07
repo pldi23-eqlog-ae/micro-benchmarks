@@ -107,7 +107,7 @@ pub mod run_n {
             report.egraph_nodes
         }
 
-        fn egglog_text(&self) -> Option<String> {
+        fn eqlog_text(&self) -> Option<String> {
             let mut src = crate::get_text(&"math_full")?;
             src.push_str(
                 &format!(
@@ -145,16 +145,16 @@ pub mod run_n {
             Some(src)
         }
 
-        fn run_egglog(&mut self) -> usize {
-            let mut egraph = egg_smol::EGraph::default();
+        fn run_eqlog(&mut self) -> usize {
+            let mut egraph = eqlog::EGraph::default();
             egraph.match_limit = 1000;
-            self.run_egglog_with_engine(egraph)
+            self.run_eqlog_with_engine(egraph)
         }
-        fn run_egglognaive(&mut self) -> usize {
-            let mut egraph = egg_smol::EGraph::default();
+        fn run_eqlognaive(&mut self) -> usize {
+            let mut egraph = eqlog::EGraph::default();
             egraph.match_limit = 1000;
             egraph.seminaive = false;
-            self.run_egglog_with_engine(egraph)
+            self.run_eqlog_with_engine(egraph)
         }
     }
 }

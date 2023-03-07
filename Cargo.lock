@@ -232,32 +232,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "egg-smol"
-version = "0.1.0"
-dependencies = [
- "clap 4.0.22",
- "env_logger 0.10.0",
- "glob",
- "hashbrown 0.13.2",
- "indexmap",
- "instant",
- "lalrpop",
- "lalrpop-util",
- "lazy_static",
- "log",
- "num-integer",
- "num-rational",
- "num-traits",
- "ordered-float",
- "regex",
- "rustc-hash",
- "smallvec",
- "symbol_table 0.2.0 (git+https://github.com/mwillsey/symbol_table?rev=acddcf8938d1b4ed2fce048c9d83c30203d404b9)",
- "symbolic_expressions 5.0.3 (git+https://github.com/oflatt/symbolic-expressions?rev=4c0ea5ca008f972450b2af72387e64d2c1c6a791)",
- "thiserror",
-]
-
-[[package]]
 name = "either"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -299,13 +273,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "eqlog"
+version = "0.1.0"
+dependencies = [
+ "clap 4.0.22",
+ "env_logger 0.10.0",
+ "glob",
+ "hashbrown 0.13.2",
+ "indexmap",
+ "instant",
+ "lalrpop",
+ "lalrpop-util",
+ "lazy_static",
+ "log",
+ "num-integer",
+ "num-rational",
+ "num-traits",
+ "ordered-float",
+ "regex",
+ "rustc-hash",
+ "smallvec",
+ "symbol_table 0.2.0 (git+https://github.com/mwillsey/symbol_table?rev=acddcf8938d1b4ed2fce048c9d83c30203d404b9)",
+ "symbolic_expressions 5.0.3 (git+https://github.com/oflatt/symbolic-expressions?rev=4c0ea5ca008f972450b2af72387e64d2c1c6a791)",
+ "thiserror",
+]
+
+[[package]]
 name = "eqlog-benchmark"
 version = "0.1.0"
 dependencies = [
  "csv",
  "egg",
- "egg-smol",
  "env_logger 0.9.3",
+ "eqlog",
  "log",
  "num-bigint",
  "num-integer",

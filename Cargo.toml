@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 egg = "0.9.3"
-egg-smol = { path = "../eqlog/" }
+eqlog = { path = "../eqlog/" }
 num-bigint = "0.4.3"
 num-integer = "0.1.45"
 num-rational = "0.4.0"

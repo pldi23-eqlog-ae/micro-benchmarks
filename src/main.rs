@@ -18,12 +18,12 @@ pub fn default_runner<L: Language, N: Analysis<L> + Default>() -> Runner<L, N> {
 }
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "egg-smol-benchmarks")]
+#[structopt(name = "eqlog-benchmarks")]
 pub(crate) struct Opt {
     #[structopt(long)]
     disable_egg: bool,
     #[structopt(long)]
-    disable_egglog: bool,
+    disable_eqlog: bool,
     // repeat should be an odd number
     #[structopt(long, default_value = "3")]
     repeat: usize,
@@ -35,7 +35,7 @@ pub(crate) struct Opt {
 
 pub fn get_text(name: &str) -> Option<String> {
     let mut text = String::default();
-    File::open(format!("src/egglog/{}.egg", name))
+    File::open(format!("src/eqlog/{}.egg", name))
         .ok()?
         .read_to_string(&mut text)
         .ok()?;
@@ -45,12 +45,12 @@ pub fn get_text(name: &str) -> Option<String> {
 trait Benchmark {
     fn name(&self) -> String;
     fn run_egg(&self) -> usize;
-    fn egglog_text(&self) -> Option<String>;
-    fn run_egglog_with_engine(&self, mut egraph: egg_smol::EGraph) -> usize {
+    fn eqlog_text(&self) -> Option<String>;
+    fn run_eqlog_with_engine(&self, mut egraph: eqlog::EGraph) -> usize {
         let msgs = egraph
-            .parse_and_run_program(&self.egglog_text().unwrap())
+            .parse_and_run_program(&self.eqlog_text().unwrap())
             .unwrap();
-        log::info!("===== egglog =====");
+        log::info!("===== eqlog =====");
         let mut report = None;
         let mut db_size = 0;
         let re = regex::Regex::new("has size ([0-9]+)").unwrap();
@@ -69,20 +69,20 @@ trait Benchmark {
         if let Some(report) = report {
             log::info!("{}", report);
         } else {
-            log::info!("No egglog performance report for {}", self.name());
+            log::info!("No eqlog performance report for {}", self.name());
         }
         db_size
     }
-    fn run_egglog(&mut self) -> usize;
+    fn run_eqlog(&mut self) -> usize;
 
-    fn run_egglognaive(&mut self) -> usize;
+    fn run_eqlognaive(&mut self) -> usize;
 }
 
 #[derive(Clone, Debug, Serialize)]
 enum Engine {
     Egg,
-    Egglog,
-    EgglogNaive,
+    Eqlog,
+    EqlogNaive,
 }
 use serde::Serialize;
 
@@ -120,8 +120,8 @@ impl BenchmarkRunner {
     pub fn run_one(&self, bench: &mut Box<dyn Benchmark>) -> Vec<BenchmarkRecord> {
         let opt = Opt::from_args();
         let mut egg_duration = None;
-        let mut egglog_duration = None;
-        let mut egglognaive_duration = None;
+        let mut eqlog_duration = None;
+        let mut eqlognaive_duration = None;
         let mut records = vec![];
         if !opt.disable_egg {
             let mut durations = vec![];
@@ -141,59 +141,59 @@ impl BenchmarkRunner {
             });
         }
 
-        if !opt.disable_egglog {
+        if !opt.disable_eqlog {
             let mut durations = vec![];
             let mut size = 0;
             for _ in 0..opt.repeat {
-                let egglog_start_time = time::Instant::now();
-                size = bench.run_egglog();
-                durations.push(time::Instant::now() - egglog_start_time);
+                let eqlog_start_time = time::Instant::now();
+                size = bench.run_eqlog();
+                durations.push(time::Instant::now() - eqlog_start_time);
             }
             durations.sort();
-            egglog_duration = Some(durations[opt.repeat / 2]);
+            eqlog_duration = Some(durations[opt.repeat / 2]);
             records.push(BenchmarkRecord {
                 size,
                 benchmark: bench.name().to_string(),
-                engine: Engine::Egglog,
-                time: egglog_duration.unwrap().as_nanos().to_string(),
+                engine: Engine::Eqlog,
+                time: eqlog_duration.unwrap().as_nanos().to_string(),
             });
         }
 
-        if !opt.disable_egglog {
+        if !opt.disable_eqlog {
             let mut durations = vec![];
             let mut size = 0;
             for _ in 0..opt.repeat {
-                let egglognaive_start_time = time::Instant::now();
-                size = bench.run_egglognaive();
-                durations.push(time::Instant::now() - egglognaive_start_time);
+                let eqlognaive_start_time = time::Instant::now();
+                size = bench.run_eqlognaive();
+                durations.push(time::Instant::now() - eqlognaive_start_time);
             }
             durations.sort();
-            egglognaive_duration = Some(durations[opt.repeat / 2]);
+            eqlognaive_duration = Some(durations[opt.repeat / 2]);
             records.push(BenchmarkRecord {
                 size,
                 benchmark: bench.name().to_string(),
-                engine: Engine::EgglogNaive,
-                time: egglognaive_duration.unwrap().as_nanos().to_string(),
+                engine: Engine::EqlogNaive,
+                time: eqlognaive_duration.unwrap().as_nanos().to_string(),
             });
         }
 
-        if !opt.disable_egg && !opt.disable_egglog {
+        if !opt.disable_egg && !opt.disable_eqlog {
             eprintln!(
-                "On benchmark {:?}, egglog spent {:.3}s, egglog-naive spent {:.3}s and egg spent {:.3}s, egglog/egg: {:?}",
+                "On benchmark {:?}, eqlog spent {:.3}s, eqlog-naive spent {:.3}s and egg spent {:.3}s, eqlog/egg: {:?}",
                 bench.name(),
-                egglog_duration.unwrap().as_secs_f64(),
-                egglognaive_duration.unwrap().as_secs_f64(),
+                eqlog_duration.unwrap().as_secs_f64(),
+                eqlognaive_duration.unwrap().as_secs_f64(),
                 egg_duration.unwrap().as_secs_f64(),
-                egglog_duration.unwrap().as_secs_f64() / egg_duration.unwrap().as_secs_f64()
+                eqlog_duration.unwrap().as_secs_f64() / egg_duration.unwrap().as_secs_f64()
             );
         }
 
-        if opt.disable_egg && !opt.disable_egglog {
+        if opt.disable_egg && !opt.disable_eqlog {
             eprintln!(
-                "On benchmark {:?}, egglog spent {:.3}s and egglog-naive spent {:.3}s",
+                "On benchmark {:?}, eqlog spent {:.3}s and eqlog-naive spent {:.3}s",
                 bench.name(),
-                egglog_duration.unwrap().as_secs_f64(),
-                egglognaive_duration.unwrap().as_secs_f64()
+                eqlog_duration.unwrap().as_secs_f64(),
+                eqlognaive_duration.unwrap().as_secs_f64()
             );
         }
 

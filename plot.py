@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 
-parser = argparse.ArgumentParser(description='Benchmarking egglog on the micro-benchmark')
+parser = argparse.ArgumentParser(description='Benchmarking eqlog on the micro-benchmark')
 parser.add_argument("--csvfile", default="benchmarks.csv")
 parser.add_argument("--pdffile", default="benchmarks.pdf")
 parser.add_argument("--no-viz", action='store_true')
@@ -22,17 +22,17 @@ def smooth(data):
 
 X = 3
 plt.figure(1)
-egglog = list(map(lambda x: (x[X], x[2]/1e9), filter(lambda x: x[1] == 'Egglog', data)))
-egglog = smooth(egglog)
-egglog_x = list(map(lambda x:x[0], egglog))
-egglog_y = list(map(lambda x:x[1], egglog))
-plt.plot(egglog_y, egglog_x, label="EqLog")
+eqlog = list(map(lambda x: (x[X], x[2]/1e9), filter(lambda x: x[1] == 'Eqlog', data)))
+eqlog = smooth(eqlog)
+eqlog_x = list(map(lambda x:x[0], eqlog))
+eqlog_y = list(map(lambda x:x[1], eqlog))
+plt.plot(eqlog_y, eqlog_x, label="EqLog")
 
-egglognaive = list(map(lambda x: (x[X], x[2]/1e9), filter(lambda x: x[1] == 'EgglogNaive', data)))
-egglognaive = smooth(egglognaive)
-egglognaive_x = list(map(lambda x:x[0], egglognaive))
-egglognaive_y = list(map(lambda x:x[1], egglognaive))
-plt.plot(egglognaive_y, egglognaive_x, label="EqLogNI")
+eqlognaive = list(map(lambda x: (x[X], x[2]/1e9), filter(lambda x: x[1] == 'EqlogNaive', data)))
+eqlognaive = smooth(eqlognaive)
+eqlognaive_x = list(map(lambda x:x[0], eqlognaive))
+eqlognaive_y = list(map(lambda x:x[1], eqlognaive))
+plt.plot(eqlognaive_y, eqlognaive_x, label="EqLogNI")
 
 egg = list(map(lambda x: (x[X], x[2]/1e9), filter(lambda x: x[1] == 'Egg', data)))
 # egg = sorted(egg, key = lambda x: x[1])
@@ -51,27 +51,5 @@ plt.savefig(args.pdffile)
 if not args.no_viz:
     plt.show()
 
-naive_speedup = egg[-1][1] / egglognaive[-1][1]
-print("EgglogNaive speedup over egg: " + str(naive_speedup))
-
-# plt.figure(2)
-# X = 0
-# egglog = list(map(lambda x: (x[X], x[2]/1e9), filter(lambda x: x[1] == 'Egglog', data)))
-# # egglog = sorted(egglog, key = lambda x: x[1])
-# egglog_x = list(map(lambda x:x[0], egglog))
-# egglog_y = list(map(lambda x:x[1], egglog))
-# plt.plot(egglog_x, egglog_y, label="egglog")
-
-# egg = list(map(lambda x: (x[X], x[2]/1e9), filter(lambda x: x[1] == 'Egg', data)))
-# # egg = sorted(egg, key = lambda x: x[1])
-# egg_x = list(map(lambda x:x[0], egg))
-# egg_y = list(map(lambda x:x[1], egg))
-# plt.plot(egg_x, egg_y, label="egg")
-
-# egglog = list(map(lambda x: (x[X], x[2]/1e9), filter(lambda x: x[1] == 'EgglogNaive', data)))
-# # egglog = sorted(egglog, key = lambda x: x[1])
-# egglog_x = list(map(lambda x:x[0], egglog))
-# egglog_y = list(map(lambda x:x[1], egglog))
-# plt.plot(egglog_x, egglog_y, label="egglog-naive")
-# plt.legend(loc='upper right')
-# plt.savefig("time-iter.png")
+naive_speedup = egg[-1][1] / eqlognaive[-1][1]
+print("EqlogNaive speedup over egg: " + str(naive_speedup))
