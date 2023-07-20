@@ -1,4 +1,3 @@
-(set-option match_limit 1000)
 (datatype Math
     (Diff Math Math)
     (Integral Math Math)
